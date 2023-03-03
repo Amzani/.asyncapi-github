@@ -32,7 +32,7 @@ jobs:
           script: |
             const prDetailsUrl = context.payload.issue.pull_request.url;
             const { data: pull } = await github.request(prDetailsUrl);
-            console.log(data);
+            console.log(pull);
             const { draft: isDraft} = pull;
             if(!isDraft) {
               console.log('adding ready-to-merge label...');
@@ -40,7 +40,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                labels: ['ready-to-merge']
+                labels: ['ready-to-merge-test']
               })  
             }
 
