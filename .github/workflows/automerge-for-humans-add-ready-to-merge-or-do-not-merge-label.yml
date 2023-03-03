@@ -25,6 +25,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Add ready-to-merge label
         uses: actions/github-script@v5
         with:
@@ -32,7 +33,7 @@ jobs:
           script: |
             const prDetailsUrl = context.payload.issue.pull_request.url;
             const { data: pull } = await github.request(prDetailsUrl);
-            console.log(data);
+            console.log(pull);
             const { draft: isDraft} = pull;
             if(!isDraft) {
               console.log('adding ready-to-merge label...');
@@ -76,6 +77,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Add do-not-merge label
         uses: actions/github-script@v5
         with:
@@ -98,6 +100,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Add autoupdate label
         uses: actions/github-script@v5
         with:
