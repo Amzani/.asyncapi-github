@@ -5,7 +5,7 @@
 # `ready-to-merge` and `do-not-merge` labels to get stuff merged or blocked from merging
 # `autoupdate` to keep a branch up-to-date with the target branch
 
-name: Label PRs # if proper comment added
+name: Label PRs V2 # if proper comment added
 
 on:
   issue_comment:
