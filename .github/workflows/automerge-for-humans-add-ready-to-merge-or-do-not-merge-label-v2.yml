@@ -5,7 +5,7 @@
 # `ready-to-merge` and `do-not-merge` labels to get stuff merged or blocked from merging
 # `autoupdate` to keep a branch up-to-date with the target branch
 
-name: Label PRs # if proper comment added
+name: Label PRs V2 # if proper comment added
 
 on:
   issue_comment:
@@ -25,6 +25,24 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Check approval status
+        uses: octokit/graphql-action@v2.x
+        id: get_approval_status
+        with:
+          query: |
+            query repository($owner:String!,$name:String!) {
+                pullRequest(number:$pullRequestNumber) {
+                  reviewDecision
+              }
+            }
+            owner: ${{ github.event.repository.owner.name }}
+            name: ${{ github.event.repository.name }}
+            pullRequestNumber: $ {{ github.event.issue.pull_request.id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - run: "echo 'latest release: ${{ steps.get_approval_status.outputs.data }}'"
       - name: Add ready-to-merge label
         uses: actions/github-script@v5
         with:
@@ -32,7 +50,7 @@ jobs:
           script: |
             const prDetailsUrl = context.payload.issue.pull_request.url;
             const { data: pull } = await github.request(prDetailsUrl);
-            console.log(data);
+            console.log(pull);
             const { draft: isDraft} = pull;
             if(!isDraft) {
               console.log('adding ready-to-merge label...');
@@ -76,6 +94,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Add do-not-merge label
         uses: actions/github-script@v5
         with:
@@ -98,6 +117,7 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Add autoupdate label
         uses: actions/github-script@v5
         with:
