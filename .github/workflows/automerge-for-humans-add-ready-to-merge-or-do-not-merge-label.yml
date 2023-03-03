@@ -26,6 +26,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Check approval status
+        uses: octokit/graphql-action@v2.x
+        id: get_approval_status
+        with:
+          query: |
+            query repository($owner:String!,$name:String!) {
+                pullRequest(number:$pullRequestNumber) {
+                  reviewDecision
+              }
+            }
+            owner: ${{ github.event.repository.owner.name }}
+            name: ${{ github.event.repository.name }}
+            pullRequestNumber: $ {{ github.event.issue.pull_request.id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - run: "echo 'latest release: ${{ steps.get_approval_status.outputs.data }}'"
       - name: Add ready-to-merge label
         uses: actions/github-script@v5
         with:
