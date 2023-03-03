@@ -25,7 +25,8 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - name: Check approval status
         uses: octokit/graphql-action@v2.x
         id: get_approval_status
